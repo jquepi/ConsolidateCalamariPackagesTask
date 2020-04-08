@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_", "_", "{093E5AB9-2314-4128-A504-AF6577AC9DEA}"
+ProjectSection(SolutionItems) = preProject
+	..\.gitattributes = ..\.gitattributes
+	..\.gitignore = ..\.gitignore
+	..\build.cake = ..\build.cake
+	..\build.cmd = ..\build.cmd
+	..\build.ps1 = ..\build.ps1
+	..\CODEOWNERS = ..\CODEOWNERS
+	..\gitversion.yml = ..\gitversion.yml
+	..\readme.md = ..\readme.md
+EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsolidateCalamariPackagesTask", "ConsolidateCalamariPackagesTask\ConsolidateCalamariPackagesTask.csproj", "{DF07EF23-3DBF-48B6-AADA-CC116D123898}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests\Tests.csproj", "{93D278CB-7416-467C-89EB-8A02230760AB}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{DF07EF23-3DBF-48B6-AADA-CC116D123898}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DF07EF23-3DBF-48B6-AADA-CC116D123898}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DF07EF23-3DBF-48B6-AADA-CC116D123898}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DF07EF23-3DBF-48B6-AADA-CC116D123898}.Release|Any CPU.Build.0 = Release|Any CPU
+		{93D278CB-7416-467C-89EB-8A02230760AB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{93D278CB-7416-467C-89EB-8A02230760AB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{93D278CB-7416-467C-89EB-8A02230760AB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{93D278CB-7416-467C-89EB-8A02230760AB}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
