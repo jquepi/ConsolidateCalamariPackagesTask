@@ -90,8 +90,19 @@ Task("Test")
 			});
     });
 
-Task("Pack")
+Task("Publish")
     .IsDependentOn("Build")
+    .Does(() =>
+{
+    DotNetCorePublish("./source", new DotNetCorePublishSettings
+    {
+        Configuration = configuration,
+        ArgumentCustomization = args => args.Append($"/p:Version={nugetVersion}")
+    });
+});
+
+Task("Pack")
+    .IsDependentOn("Publish")
     .Does(() =>
 {
     DotNetCorePack("source", new DotNetCorePackSettings
@@ -116,7 +127,7 @@ Task("CopyToLocalPackages")
     CopyFiles(Path.Combine(artifactsDir, $"Octopus.Build.ConsolidateCalamariPackagesTask.{nugetVersion}.nupkg"), localPackagesDir);
 });
 
-Task("Publish")
+Task("Push")
     .IsDependentOn("Test")
     .IsDependentOn("Pack")
     .WithCriteria(BuildSystem.IsRunningOnTeamCity)
@@ -134,7 +145,7 @@ Task("Publish")
 
 Task("Default")
     .IsDependentOn("CopyToLocalPackages")
-    .IsDependentOn("Publish");
+    .IsDependentOn("Push");
 
 //////////////////////////////////////////////////////////////////////
 // EXECUTION
