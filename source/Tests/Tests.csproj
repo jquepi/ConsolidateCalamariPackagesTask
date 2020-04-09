@@ -1,0 +1,26 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ConsolidateCalamariPackagesTask\ConsolidateCalamariPackagesTask.csproj" />
+    <PackageReference Include="Assent" Version="1.5.0" />
+    <PackageReference Include="FluentAssertions" Version="5.10.3" />
+    <PackageReference Include="NSubstitute" Version="4.2.1" />
+    <PackageReference Include="nunit" Version="3.12.0" />
+    <PackageReference Include="NUnit3TestAdapter" Version="3.15.1" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.4.0" />
+    <PackageReference Include="TestStack.BDDfy" Version="4.3.2" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Calamari" Version="12.0.2" />
+    <PackageReference Include="Calamari.Cloud" Version="12.0.2" />
+    <PackageReference Include="Calamari.linux-x64" Version="12.0.2" />
+    <PackageReference Include="Calamari.osx-x64" Version="12.0.2" />
+    <PackageReference Include="Calamari.win-x64" Version="12.0.2" />
+  </ItemGroup>
+
+</Project>

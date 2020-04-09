@@ -1,0 +1,7 @@
+<Project>
+  <UsingTask TaskName="ConsolidateCalamariPackagesTask" AssemblyFile="$(MSBuildThisFileDirectory)Octopus.Build.ConsolidateCalamariPackagesTask.dll"/>
+
+  <Target Name="ConsolidateCalamariPackages" AfterTargets="Build" DependsOnTargets="RunResolvePackageDependencies">
+    <ConsolidateCalamariPackagesTask Packages="@(PackageDefinitions)" OutputDirectory="$(OutDir)"/>
+  </Target>
+</Project>
