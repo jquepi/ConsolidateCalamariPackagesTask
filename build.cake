@@ -113,7 +113,7 @@ Task("CopyToLocalPackages")
     .Does(() =>
 {
     CreateDirectory(localPackagesDir);
-    CopyFiles(Path.Combine(artifactsDir, $"Octopus.Build.ConsolidateCalamariPackagesTask.*.{nugetVersion}.nupkg"), localPackagesDir);
+    CopyFiles(Path.Combine(artifactsDir, $"Octopus.Build.ConsolidateCalamariPackagesTask.{nugetVersion}.nupkg"), localPackagesDir);
 });
 
 Task("Publish")
@@ -122,7 +122,7 @@ Task("Publish")
     .WithCriteria(BuildSystem.IsRunningOnTeamCity)
     .Does(() =>
 {
-    var packages = GetFiles($"{artifactsDir}Octopus.Build.ConsolidateCalamariPackagesTask.*.{nugetVersion}.nupkg");
+    var packages = GetFiles($"{artifactsDir}Octopus.Build.ConsolidateCalamariPackagesTask.{nugetVersion}.nupkg");
     foreach (var package in packages)
     {
         NuGetPush(package, new NuGetPushSettings {
