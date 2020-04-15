@@ -76,12 +76,11 @@ namespace Octopus.Build.ConsolidateCalamariPackagesTask
         private static void WriteUniqueFilesToZip(SourceFile[] sourceFiles, ZipArchive zip)
         {
             var uniqueFiles = sourceFiles
-                .GroupBy(sourceFile => new {sourceFile.Name, sourceFile.Hash})
+                .GroupBy(sourceFile => new {sourceFile.FullName, sourceFile.Hash})
                 .Select(g => new
                 {
-                    g.Key.Name,
+                    g.Key.FullName,
                     g.Key.Hash,
-                    g.First().Path,
                     g.First().ArchivePath
                 });
 
@@ -90,11 +89,11 @@ namespace Octopus.Build.ConsolidateCalamariPackagesTask
                 using (var sourceZip = ZipFile.OpenRead(groupedBySourceArchive.Key))
                     foreach (var uniqueFile in groupedBySourceArchive)
                     {
-                        var entryName = Path.Combine(uniqueFile.Hash, uniqueFile.Name);
+                        var entryName = Path.Combine(uniqueFile.Hash, uniqueFile.FullName);
                         var entry = zip.CreateEntry(entryName, CompressionLevel.Fastest);
 
                         using (var destStream = entry.Open())
-                        using (var sourceStream = sourceZip.Entries.First(e => e.FullName == uniqueFile.Name).Open())
+                        using (var sourceStream = sourceZip.Entries.First(e => e.FullName == uniqueFile.FullName).Open())
                             sourceStream.CopyTo(destStream);
                     }
             }
@@ -139,7 +138,7 @@ namespace Octopus.Build.ConsolidateCalamariPackagesTask
                         Platform = platform,
                         ArchivePath = archivePath,
                         Name = entry.FullName,
-                        Path = entry.FullName,
+                        FullName = entry.FullName,
                         Hash = Hash(entry)
                     })
                     .ToArray();
