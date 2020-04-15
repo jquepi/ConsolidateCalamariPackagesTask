@@ -22,12 +22,12 @@ namespace Octopus.Build.ConsolidateCalamariPackagesTask
         
         public string AssemblyVersion { get; set; } = typeof(Consolidate).Assembly.GetName().Version.ToString();
 
-        public bool Execute(string outputDirectory, IReadOnlyList<PackageReference> packageReferences)
+        public (bool result, string packageFileName) Execute(string outputDirectory, IReadOnlyList<PackageReference> packageReferences)
         {
             if (!Directory.Exists(outputDirectory))
             {
                 log.Error($"The output directory {outputDirectory} does not exist");
-                return false;
+                return (false, null);
             }
 
             var packagesToScan = packageReferences
@@ -39,7 +39,7 @@ namespace Octopus.Build.ConsolidateCalamariPackagesTask
             if (File.Exists(destination))
             {
                 log.Normal("Calamari zip with the right package combination hash already exists");
-                return true;
+                return (true, destination);
             }
 
             DeleteExistingCalamariZips(destination);
@@ -58,7 +58,7 @@ namespace Octopus.Build.ConsolidateCalamariPackagesTask
             foreach (var item in indexEntries.Select(i => new {i.PackageId, i.Platform}).Distinct())
                 log.Normal($"Packaged {item.PackageId} for {item.Platform}");
 
-            return true;
+            return (true, destination);
         }
 
         private static void CreateConsolidatedPackage(SourceFile[] sourceFiles, string destination)

@@ -11,7 +11,10 @@ namespace Octopus.Build.ConsolidateCalamariPackagesTask
 
         [Required]
         public string OutputDirectory { get; set; }
-
+        
+        [Output]
+        public string ConsolidatedPackageFilename { get; set; }
+        
         public override bool Execute()
         {
             // The Metadata of these ITaskItems contains:
@@ -30,7 +33,9 @@ namespace Octopus.Build.ConsolidateCalamariPackagesTask
                 })
                 .ToArray();
             
-            return new Consolidate(new MsBuildTaskLog(Log)).Execute(OutputDirectory, packageReferences);
+            var (result, packageFilename) = new Consolidate(new MsBuildTaskLog(Log)).Execute(OutputDirectory, packageReferences);
+            ConsolidatedPackageFilename = packageFilename;
+            return result;
         }
 
      

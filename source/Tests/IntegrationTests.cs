@@ -62,7 +62,7 @@ namespace Tests
             var sw = Stopwatch.StartNew();
             var task = new Consolidate(Substitute.For<ILog>());
             task.AssemblyVersion = "1.2.3";
-            returnValue = task.Execute(temp, packageReferences);
+            (returnValue, _) = task.Execute(temp, packageReferences);
             Console.WriteLine($"Time: {sw.ElapsedMilliseconds:n0}ms");
         }
 
