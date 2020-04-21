@@ -122,7 +122,7 @@ namespace Octopus.Build.ConsolidateCalamariPackagesTask
                 ? "netfx"
                 : package.Name.Split('.')[1];
 
-            var archivePath = Path.Combine(package.ResolvedPath, $"{package.Name}.{package.Version}.nupkg");
+            var archivePath = Path.Combine(package.ResolvedPath, $"{package.Name}.{package.Version}.nupkg".ToLower());
             if (!File.Exists(archivePath))
                 throw new Exception($"Could not find the source NuGet package {archivePath} does not exist");
 
