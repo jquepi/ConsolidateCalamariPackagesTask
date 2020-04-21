@@ -43,8 +43,8 @@ namespace Octopus.Build.ConsolidateCalamariPackagesTask
                         Version = Version,
                         Platform = platform,
                         ArchivePath = archivePath,
-                        Name = entry.FullName,
-                        FullName = entry.FullName,
+                        FullNameInDestinationArchive = entry.FullName,
+                        FullNameInSourceArchive = entry.FullName,
                         Hash = hasher.Hash(entry)
                     })
                     .ToArray();
