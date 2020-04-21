@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
@@ -49,15 +50,27 @@ namespace Octopus.Build.ConsolidateCalamariPackagesTask
 
         private static void WriteIndexTo(Stream stream, SourceFile[] sourceFiles)
         {
-            var index = sourceFiles
-                .GroupBy(i => new {i.PackageId, i.Version, i.Platform})
-                .Select(g => new
-                {
-                    g.Key.PackageId,
-                    g.Key.Version,
-                    g.Key.Platform,
-                    Hashes = g.Select(i => i.Hash).OrderBy(h => h).ToArray()
-                });
+            Dictionary<string, string[]> GroupByPlatform(IEnumerable<SourceFile> filesForPackage)
+                => filesForPackage
+                    .GroupBy(f => f.Platform)
+                    .ToDictionary(
+                        g => g.Key,
+                        g => g.Select(f => f.Hash).OrderBy(h => h).ToArray()
+                    );
+            
+            var index = new ConsolidatedPackageIndex(
+                sourceFiles
+                    .GroupBy(i => new {i.PackageId, i.Version })
+                    .ToDictionary(
+                        g => g.Key.PackageId,
+                        g => new ConsolidatedPackageIndex.Package(
+                            g.Key.PackageId,
+                            g.Key.Version,
+                            GroupByPlatform(g)
+                        )
+                    )
+            );
+
             var bytes = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(index, Formatting.Indented));
             stream.Write(bytes, 0, bytes.Length);
         }
