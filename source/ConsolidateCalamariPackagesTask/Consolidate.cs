@@ -19,8 +19,8 @@ namespace Octopus.Build.ConsolidateCalamariPackagesTask
         {
             this.log = log;
         }
-        
-        public string AssemblyVersion { get; set; } = typeof(Consolidate).Assembly.GetName().Version.ToString();
+
+        public string AssemblyVersion { get; set; } = ((AssemblyInformationalVersionAttribute) typeof(Consolidate).Assembly.GetCustomAttribute(typeof(AssemblyInformationalVersionAttribute))).InformationalVersion;
 
         public (bool result, string packageFileName) Execute(string outputDirectory, IReadOnlyList<PackageReference> packageReferences)
         {
