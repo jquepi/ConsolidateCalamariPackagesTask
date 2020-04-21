@@ -20,7 +20,7 @@ namespace Tests
     {
         private string temp;
         private string expectedZip;
-        private PackageReference[] packageReferences;
+        private MsBuildPackageReference[] packageReferences;
         private bool returnValue;
 
         public void SetUp()
@@ -38,8 +38,8 @@ namespace Tests
 
         public void GivenABunchOfPackageReferences()
         {
-            PackageReference CreatePackageReference(string packageId, string version)
-                => new PackageReference()
+            MsBuildPackageReference CreatePackageReference(string packageId, string version)
+                => new MsBuildPackageReference()
                 {
                     Name = packageId,
                     Version = version,

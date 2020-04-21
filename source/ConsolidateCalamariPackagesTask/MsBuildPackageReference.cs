@@ -1,6 +1,6 @@
 namespace Octopus.Build.ConsolidateCalamariPackagesTask
 {
-    public class PackageReference
+    class MsBuildPackageReference
     {
         public string Name { get; set; }
         public string Version { get; set; }

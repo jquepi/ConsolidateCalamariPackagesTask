@@ -1,6 +1,6 @@
 namespace Octopus.Build.ConsolidateCalamariPackagesTask
 {
-    public interface ILog
+    internal interface ILog
     {
         void Error(string s);
         void Normal(string s);
