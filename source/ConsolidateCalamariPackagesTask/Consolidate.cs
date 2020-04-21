@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -66,7 +65,11 @@ namespace Octopus.Build.ConsolidateCalamariPackagesTask
                 .Where(p => p.Name.StartsWith("Calamari"))
                 .Select(p => new CalamariPackageReference(hasher, p));
 
-            return calamariPackages.ToArray();
+            var sashimiPackages = packageReferences
+                .Where(p => p.Name.StartsWith("Sashimi."))
+                .Select(p => new SashimiPackageReference(hasher, p));
+
+            return calamariPackages.Concat<IPackageReference>(sashimiPackages).ToArray();
         }
 
         private void DeleteExistingCalamariZips(string destination)

@@ -34,6 +34,7 @@ namespace Octopus.Build.ConsolidateCalamariPackagesTask
 
             using (var zip = ZipFile.OpenRead(archivePath))
                 return zip.Entries
+                    .Where(e => !string.IsNullOrEmpty(e.Name))
                     .Where(e => e.FullName != "[Content_Types].xml")
                     .Where(e => !e.FullName.StartsWith("_rels"))
                     .Where(e => !e.FullName.StartsWith("package/services"))
@@ -43,6 +44,7 @@ namespace Octopus.Build.ConsolidateCalamariPackagesTask
                         Version = Version,
                         Platform = platform,
                         ArchivePath = archivePath,
+                        IsNupkg = true,
                         FullNameInDestinationArchive = entry.FullName,
                         FullNameInSourceArchive = entry.FullName,
                         Hash = hasher.Hash(entry)

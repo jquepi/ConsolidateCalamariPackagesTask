@@ -60,12 +60,13 @@ namespace Octopus.Build.ConsolidateCalamariPackagesTask
             
             var index = new ConsolidatedPackageIndex(
                 sourceFiles
-                    .GroupBy(i => new {i.PackageId, i.Version })
+                    .GroupBy(i => new {i.PackageId, i.Version, i.IsNupkg })
                     .ToDictionary(
                         g => g.Key.PackageId,
                         g => new ConsolidatedPackageIndex.Package(
                             g.Key.PackageId,
                             g.Key.Version,
+                            g.Key.IsNupkg,
                             GroupByPlatform(g)
                         )
                     )

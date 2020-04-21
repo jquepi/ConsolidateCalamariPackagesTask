@@ -5,6 +5,9 @@ using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Xml;
+using System.Xml.XPath;
 using Assent;
 using FluentAssertions;
 using Microsoft.Build.Framework;
@@ -28,7 +31,7 @@ namespace Tests
             temp = Path.GetTempFileName();
             File.Delete(temp);
             Directory.CreateDirectory(temp);
-            expectedZip = Path.Combine(temp, $"Calamari.54d634ceb0b28d3d0463f4cd674461c5.zip");
+            expectedZip = Path.Combine(temp, $"Calamari.3327050d788658cd16da010e75580d32.zip");
         }
 
         public void TearDown()
@@ -38,24 +41,21 @@ namespace Tests
 
         public void GivenABunchOfPackageReferences()
         {
-            MsBuildPackageReference CreatePackageReference(string packageId, string version)
-                => new MsBuildPackageReference()
+            var xmlDoc = new XmlDocument();
+            xmlDoc.Load(GetCsProjFileName());
+            packageReferences = xmlDoc.SelectNodes("Project/ItemGroup/PackageReference")
+                .Cast<XmlNode>()
+                .Select(n => (packageId: n.Attributes["Include"].Value, version: n.Attributes["Version"].Value))
+                .Select(p => new MsBuildPackageReference()
                 {
-                    Name = packageId,
-                    Version = version,
-                    ResolvedPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".nuget", "packages", packageId, version)
-                };
-
-            packageReferences = new[]
-            {
-                CreatePackageReference("Assent", "1.5.0"),
-                CreatePackageReference("Calamari", "12.0.2"),
-                CreatePackageReference("Calamari.Cloud", "12.0.2"),
-                CreatePackageReference("Calamari.linux-x64", "12.0.2"),
-                CreatePackageReference("Calamari.osx-x64", "12.0.2"),
-                CreatePackageReference("Calamari.win-x64", "12.0.2"),
-            };
+                    Name = p.packageId,
+                    Version = p.version,
+                    ResolvedPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".nuget", "packages", p.packageId, p.version)
+                })
+                .ToArray();
         }
+        
+        
 
         public void WhenTheTaskIsExecuted()
         {
@@ -89,6 +89,9 @@ namespace Tests
                 this.Assent(sr.ReadToEnd());
         }
 
+        string GetCsProjFileName([CallerFilePath] string callerFilePath = null)
+            => Path.Combine(Path.GetDirectoryName(callerFilePath), "Tests.csproj");
+        
         [Test]
         public void Execute()
             => this.BDDfy();

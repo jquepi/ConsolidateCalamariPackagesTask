@@ -22,7 +22,7 @@
 *.cmd text
 *.coffee text
 *.config text
-*.cs text diff=csharp 
+*.cs text diff=csharp
 *.css text
 *.less text
 *.cshtml text
@@ -36,6 +36,8 @@
 *.ruleset text
 *.Stylecop text
 *.targets text
+*.ts text
+*.tsx text
 *.tt text
 *.txt text
 *.vb text
@@ -43,9 +45,13 @@
 *.xml text
 *.xunit text
 
-*.csproj text merge=union 
-*.vbproj text merge=union 
+# New project system we want to see conflicts
+*.csproj text
+*.vbproj text
 
-*.sln text eol=crlf merge=union 
+*.sln text eol=crlf merge=union
+*.sh text eol=lf
 
-*.approved.* binary
+*.approved.* -text
+
+*.pem -text
