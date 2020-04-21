@@ -111,7 +111,7 @@ namespace Octopus.Build.ConsolidateCalamariPackagesTask
                     Hashes = g.Select(i => i.Hash).OrderBy(h => h).ToArray()
                 });
             var bytes = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(index, Formatting.Indented));
-            stream.Write(bytes);
+            stream.Write(bytes, 0, bytes.Length);
         }
 
         private IReadOnlyList<SourceFile> GetSourceFilesFromCalamariPackage(PackageReference package)
