@@ -6,6 +6,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Text.RegularExpressions;
 using System.Xml;
 using System.Xml.XPath;
 using Assent;
@@ -21,6 +22,8 @@ namespace Tests
 {
     public class IntegrationTests
     {
+        private readonly Configuration assentConfiguration = new Configuration().UsingSanitiser(s => Regex.Replace(s, "[a-z0-9]{32}", "<hash>"));
+
         private string temp;
         private string expectedZip;
         private MsBuildPackageReference[] packageReferences;
@@ -78,7 +81,7 @@ namespace Tests
         public void AndThenThePackageContentsShouldBe()
         {
             using (var zip = ZipFile.Open(expectedZip, ZipArchiveMode.Read))
-                this.Assent(string.Join("\r\n", zip.Entries.Select(e => e.FullName).OrderBy(k => k)));
+                this.Assent(string.Join("\r\n", zip.Entries.Select(e => e.FullName).OrderBy(k => k)), assentConfiguration);
         }
 
         public void AndThenTheIndexShouldBe()
@@ -86,7 +89,7 @@ namespace Tests
             using (var zip = ZipFile.Open(expectedZip, ZipArchiveMode.Read))
             using (var entry = zip.Entries.First(e => e.FullName == "index.json").Open())
             using (var sr = new StreamReader(entry))
-                this.Assent(sr.ReadToEnd());
+                this.Assent(sr.ReadToEnd(), assentConfiguration);
         }
 
         string GetCsProjFileName([CallerFilePath] string callerFilePath = null)
