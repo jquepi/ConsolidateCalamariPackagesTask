@@ -22,7 +22,8 @@ namespace Tests
 {
     public class IntegrationTests
     {
-        private readonly Configuration assentConfiguration = new Configuration().UsingSanitiser(SanitiseHashes);
+        private readonly Configuration assentConfiguration = new Configuration()
+            .UsingSanitiser(s => Sanitise4PartVersions(SanitiseHashes(s)));
 
         private string temp;
         private string expectedZip;
@@ -97,6 +98,9 @@ namespace Tests
         
         private static string SanitiseHashes(string s)
             => Regex.Replace(s, "[a-z0-9]{32}", "<hash>");
+        
+        private static string Sanitise4PartVersions(string s)
+            => Regex.Replace(s, @"[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+", "<version>");
 
         [Test]
         public void Execute()

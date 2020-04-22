@@ -310,8 +310,8 @@
 <hash>\Microsoft.WindowsAzure.Storage.dll
 <hash>\mscordaccore.dll
 <hash>\mscordaccore.dll
-<hash>\mscordaccore_amd64_amd64_4.6.27617.05.dll
-<hash>\mscordaccore_amd64_amd64_4.700.20.6602.dll
+<hash>\mscordaccore_amd64_amd64_<version>.dll
+<hash>\mscordaccore_amd64_amd64_<version>.dll
 <hash>\mscordbi.dll
 <hash>\mscordbi.dll
 <hash>\mscorlib.dll
@@ -419,7 +419,7 @@
 <hash>\SOS.NETCore.dll
 <hash>\SOS.NETCore.dll
 <hash>\SOS.NETCore.dll
-<hash>\sos_amd64_amd64_4.6.27617.05.dll
+<hash>\sos_amd64_amd64_<version>.dll
 <hash>\SOS_README.md
 <hash>\SOS_README.md
 <hash>\sosdocsunix.txt
