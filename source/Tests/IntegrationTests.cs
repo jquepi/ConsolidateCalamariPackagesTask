@@ -22,7 +22,7 @@ namespace Tests
 {
     public class IntegrationTests
     {
-        private readonly Configuration assentConfiguration = new Configuration().UsingSanitiser(s => Regex.Replace(s, "[a-z0-9]{32}", "<hash>"));
+        private readonly Configuration assentConfiguration = new Configuration().UsingSanitiser(SanitiseHashes);
 
         private string temp;
         private string expectedZip;
@@ -81,7 +81,7 @@ namespace Tests
         public void AndThenThePackageContentsShouldBe()
         {
             using (var zip = ZipFile.Open(expectedZip, ZipArchiveMode.Read))
-                this.Assent(string.Join("\r\n", zip.Entries.Select(e => e.FullName).OrderBy(k => k)), assentConfiguration);
+                this.Assent(string.Join("\r\n", zip.Entries.Select(e => SanitiseHashes(e.FullName)).OrderBy(k => k)), assentConfiguration);
         }
 
         public void AndThenTheIndexShouldBe()
@@ -95,6 +95,9 @@ namespace Tests
         string GetCsProjFileName([CallerFilePath] string callerFilePath = null)
             => Path.Combine(Path.GetDirectoryName(callerFilePath), "Tests.csproj");
         
+        private static string SanitiseHashes(string s)
+            => Regex.Replace(s, "[a-z0-9]{32}", "<hash>");
+
         [Test]
         public void Execute()
             => this.BDDfy();
