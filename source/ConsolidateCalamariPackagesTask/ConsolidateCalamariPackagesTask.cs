@@ -25,7 +25,7 @@ namespace Octopus.Build.ConsolidateCalamariPackagesTask
             // ResolvedPath= C:\\Users\\rober\\.nuget\\packages\\microsoft.build.framework\\16.5.0	
 
             var packageReferences = Packages
-                .Select(p => new PackageReference
+                .Select(p => new MsBuildPackageReference
                 {
                     Name = p.GetMetadata("Name"),
                     Version = p.GetMetadata("Version"),

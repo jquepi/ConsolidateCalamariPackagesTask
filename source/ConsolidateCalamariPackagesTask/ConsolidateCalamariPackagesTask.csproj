@@ -4,7 +4,6 @@
     <AssemblyName>Octopus.Build.ConsolidateCalamariPackagesTask</AssemblyName>
     <RootNamespace>Octopus.Build.ConsolidateCalamariPackagesTask</RootNamespace>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <IncludeBuildOutput>false</IncludeBuildOutput>
   </PropertyGroup>
 
   <ItemGroup>

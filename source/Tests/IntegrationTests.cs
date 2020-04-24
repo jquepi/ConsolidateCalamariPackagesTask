@@ -5,6 +5,10 @@ using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Text.RegularExpressions;
+using System.Xml;
+using System.Xml.XPath;
 using Assent;
 using FluentAssertions;
 using Microsoft.Build.Framework;
@@ -18,9 +22,12 @@ namespace Tests
 {
     public class IntegrationTests
     {
+        private readonly Configuration assentConfiguration = new Configuration()
+            .UsingSanitiser(s => Sanitise4PartVersions(SanitiseHashes(s)));
+
         private string temp;
         private string expectedZip;
-        private PackageReference[] packageReferences;
+        private MsBuildPackageReference[] packageReferences;
         private bool returnValue;
 
         public void SetUp()
@@ -28,7 +35,7 @@ namespace Tests
             temp = Path.GetTempFileName();
             File.Delete(temp);
             Directory.CreateDirectory(temp);
-            expectedZip = Path.Combine(temp, $"Calamari.54d634ceb0b28d3d0463f4cd674461c5.zip");
+            expectedZip = Path.Combine(temp, $"Calamari.3327050d788658cd16da010e75580d32.zip");
         }
 
         public void TearDown()
@@ -38,24 +45,21 @@ namespace Tests
 
         public void GivenABunchOfPackageReferences()
         {
-            PackageReference CreatePackageReference(string packageId, string version)
-                => new PackageReference()
+            var xmlDoc = new XmlDocument();
+            xmlDoc.Load(GetCsProjFileName());
+            packageReferences = xmlDoc.SelectNodes("Project/ItemGroup/PackageReference")
+                .Cast<XmlNode>()
+                .Select(n => (packageId: n.Attributes["Include"].Value, version: n.Attributes["Version"].Value))
+                .Select(p => new MsBuildPackageReference()
                 {
-                    Name = packageId,
-                    Version = version,
-                    ResolvedPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".nuget", "packages", packageId, version)
-                };
-
-            packageReferences = new[]
-            {
-                CreatePackageReference("Assent", "1.5.0"),
-                CreatePackageReference("Calamari", "12.0.2"),
-                CreatePackageReference("Calamari.Cloud", "12.0.2"),
-                CreatePackageReference("Calamari.linux-x64", "12.0.2"),
-                CreatePackageReference("Calamari.osx-x64", "12.0.2"),
-                CreatePackageReference("Calamari.win-x64", "12.0.2"),
-            };
+                    Name = p.packageId,
+                    Version = p.version,
+                    ResolvedPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".nuget", "packages", p.packageId, p.version)
+                })
+                .ToArray();
         }
+        
+        
 
         public void WhenTheTaskIsExecuted()
         {
@@ -78,7 +82,7 @@ namespace Tests
         public void AndThenThePackageContentsShouldBe()
         {
             using (var zip = ZipFile.Open(expectedZip, ZipArchiveMode.Read))
-                this.Assent(string.Join("\r\n", zip.Entries.Select(e => e.FullName).OrderBy(k => k)));
+                this.Assent(string.Join("\r\n", zip.Entries.Select(e => SanitiseHashes(e.FullName)).OrderBy(k => k)), assentConfiguration);
         }
 
         public void AndThenTheIndexShouldBe()
@@ -86,8 +90,17 @@ namespace Tests
             using (var zip = ZipFile.Open(expectedZip, ZipArchiveMode.Read))
             using (var entry = zip.Entries.First(e => e.FullName == "index.json").Open())
             using (var sr = new StreamReader(entry))
-                this.Assent(sr.ReadToEnd());
+                this.Assent(sr.ReadToEnd(), assentConfiguration);
         }
+
+        string GetCsProjFileName([CallerFilePath] string callerFilePath = null)
+            => Path.Combine(Path.GetDirectoryName(callerFilePath), "Tests.csproj");
+        
+        private static string SanitiseHashes(string s)
+            => Regex.Replace(s, "[a-z0-9]{32}", "<hash>");
+        
+        private static string Sanitise4PartVersions(string s)
+            => Regex.Replace(s, @"[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+", "<version>");
 
         [Test]
         public void Execute()
