@@ -3,7 +3,9 @@
   <PropertyGroup>
     <AssemblyName>Octopus.Build.ConsolidateCalamariPackagesTask</AssemblyName>
     <RootNamespace>Octopus.Build.ConsolidateCalamariPackagesTask</RootNamespace>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFramework>netstandard2.0</TargetFramework>    
+    <PackageProjectUrl>https://github.com/OctopusDeploy/ConsolidateCalamariPackagesTask/</PackageProjectUrl>
+    <PackageLicenseUrl>https://github.com/OctopusDeploy/ConsolidateCalamariPackagesTask/blob/master/LICENSE.txt</PackageLicenseUrl>
   </PropertyGroup>
 
   <ItemGroup>
